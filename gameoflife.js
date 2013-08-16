@@ -3,18 +3,25 @@ var canvasHeight = 500;
 var widthCells = canvasWidth / 10;
 var heightCells = canvasHeight / 10;
 var matrix = new Array();
+var canvas
+var bg
 var ctx;
+var ctxBg;
+var doRun;
+var animate;
 
-function init(canvas) {
-	if (!canvas) {
-		canvas = document.createElement("canvas");
-		canvas.id = "canvas";
-		document.body.appendChild(canvas);
-	}
+function init() {
+
+	canvas = document.getElementById('canvas');
+	bg = document.getElementById('bg');
+
+	bg.width = canvasWidth;
+	bg.height = canvasHeight;
 	canvas.width = canvasWidth;
 	canvas.height = canvasHeight;
 	canvas.addEventListener("click", mouseClicked, false);
 	ctx = document.getElementById('canvas').getContext('2d');
+	ctxBg = document.getElementById('bg').getContext('2d');
 	drawBoard();
 	    
 	//fill matrix with 0s	
@@ -29,21 +36,21 @@ function init(canvas) {
 
 //draw grid
 function drawBoard() {
-	ctx.beginPath();		
+	ctxBg.beginPath();		
 	//vertical lines
 	for (var i = 0; i < widthCells + 1; i++) {
-		ctx.moveTo(i * 10, 0);
-		ctx.lineTo(i * 10, heightCells * 100);				
+		ctxBg.moveTo(i * 10, 0);
+		ctxBg.lineTo(i * 10, heightCells * 100);				
 	}
 
 	//horizontal lines
 	for (var i = 0; i < heightCells + 1; i++) {
-		ctx.moveTo(0, i * 10);
-		ctx.lineTo(widthCells * 100, i * 10);				
+		ctxBg.moveTo(0, i * 10);
+		ctxBg.lineTo(widthCells * 100, i * 10);				
 	}
-	ctx.closePath();
-	ctx.strokeStyle = "#ccc";
-	ctx.stroke();		
+	ctxBg.closePath();
+	ctxBg.strokeStyle = "#ccc";
+	ctxBg.stroke();		
 }
 
 //on mouse click, if cell is white make green and set to 1, else vice versa
@@ -53,7 +60,7 @@ function mouseClicked(e) {
 		colorCell(cell[0], cell[1], "green");
 		matrix[cell[0]][cell[1]] = 1;
 	} else {
-		colorCell(cell[0], cell[1], "white");
+		clearCell(cell[0], cell[1]);
 		matrix[cell[0]][cell[1]] = 0;
 	}
 }
@@ -75,7 +82,7 @@ function getNumNeighbors(matrix, i, j){
 }
 
 //return next gen of board
-function getNextGen(matrix){
+function getNextGen(){
    var newMatrix = new Array();
     for(var i = 0; i < matrix.length; i++) {
         newMatrix.push(matrix[i].slice());
@@ -91,10 +98,10 @@ function getNextGen(matrix){
             } else {
                 if (neighbors < 2) {
                     newMatrix[i][j] = 0;
-					colorCell(i, j, "white");
+					clearCell(i, j);
                 } else if (neighbors > 3) {
                     newMatrix[i][j] = 0;
-					colorCell(i, j, "white");
+					clearCell(i, j);
                 }
             }
         }
@@ -127,4 +134,27 @@ function getMousePosition(e) {
 function colorCell(x, y, color) {
 	ctx.fillStyle = color;
 	ctx.fillRect (x * 10, y * 10, 10, 10);
+}
+
+//clear cell
+function clearCell(x, y) {
+	ctx.clearRect (x * 10, y * 10, 10, 10);
+}
+
+function run() {
+	var i = 0;
+	while (i < 7200) {
+		animate = setTimeout( "getNextGen();", i*500);
+		i++
+	}
+}
+
+//reset board
+function reset() {
+	for (var x = 0; x < 50; x++) {
+		for (var y = 0; y < 50; y++) {
+			matrix[x][y] = 0;
+			clearCell(x, y);
+		}
+	}
 }

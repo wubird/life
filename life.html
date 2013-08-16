@@ -3,9 +3,15 @@
 		<script src="gameoflife.js"></script>
 	</head>
 	<body>
+		<canvas id="bg" width="500" height="500" 
+   style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+		<canvas id="canvas" width="500" height="500" 
+   style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
 		<script>
 			init();
 		</script>
-		<button onclick="getNextGen(matrix);">Next generation</button>
+		<button onclick="run();" style="position: absolute; left: 520; top: 0">Run</button>
+		<button onclick="getNextGen(matrix);" style="position: absolute; left: 520; top: 30">Step</button>
+		<button onclick="reset();" style="position: absolute; left: 520; top: 60">Clear</button>
 	</body>
 </html>
