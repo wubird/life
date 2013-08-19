@@ -3,6 +3,7 @@
 		<script src="gameoflife.js"></script>
 	</head>
 	<body>
+		
 		<canvas id="bg" width="500" height="500" 
    style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
 		<canvas id="canvas" width="500" height="500" 
@@ -10,8 +11,23 @@
 		<script>
 			init();
 		</script>
-		<button onclick="run();" style="position: absolute; left: 520; top: 0">Run</button>
-		<button onclick="getNextGen(matrix);" style="position: absolute; left: 520; top: 30">Step</button>
-		<button onclick="reset();" style="position: absolute; left: 520; top: 60">Clear</button>
+		<div style = 	"left: 520; 
+						top: 0;
+						position: absolute;">
+			<button onclick="getNextGen(matrix);">Step</button>
+			<button onclick="run();">Run</button>
+			<button onclick="reset();">Clear</button>
+		</div>
+		<div style = 	"left: 520; 
+						top: 50;
+						position: absolute;">
+			<h2>Conway's Game of Life</h2>
+			<p> 1.) Any live cell with fewer than two live neighbours dies, as if caused by under-population. </p>
+			<p> 2.) Any live cell with two or three live neighbours lives on to the next generation. </p>
+			<p> 3.) Any live cell with more than three live neighbours dies, as if by overcrowding </p>
+			<p> 4.) Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction. </p>
+			<p></p>
+			<a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life" target="_blank">Wikipedia page</a>
+		</div>
 	</body>
 </html>

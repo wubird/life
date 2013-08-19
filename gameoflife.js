@@ -7,8 +7,8 @@ var canvas
 var bg
 var ctx;
 var ctxBg;
-var doRun;
-var animate;
+var running;
+var reset;
 
 function init() {
 
@@ -32,6 +32,23 @@ function init() {
         }
         matrix[i] = row;
     }
+	
+	//put in a cool pattern to start
+	matrix[26][17] = 1;
+	matrix[27][17] = 1;
+	matrix[27][15] = 1;
+	matrix[29][16] = 1;
+	matrix[30][17] = 1;
+	matrix[31][17] = 1;
+	matrix[32][17] = 1;
+
+	colorCell(26, 17, "green");
+	colorCell(27, 17, "green");
+	colorCell(27, 15, "green");
+	colorCell(29, 16, "green");
+	colorCell(30, 17, "green");
+	colorCell(31, 17, "green");
+	colorCell(32, 17, "green");
 }
 
 //draw grid
@@ -56,6 +73,10 @@ function drawBoard() {
 //on mouse click, if cell is white make green and set to 1, else vice versa
 function mouseClicked(e) {
 	var cell = getMousePosition(e);
+	if (running) {
+		clearInterval(running);
+	}
+	fullReset = false;
 	if (matrix[cell[0]][cell[1]] == 0 ) {
 		colorCell(cell[0], cell[1], "green");
 		matrix[cell[0]][cell[1]] = 1;
@@ -83,6 +104,7 @@ function getNumNeighbors(matrix, i, j){
 
 //return next gen of board
 function getNextGen(){
+	fullReset = false;
    var newMatrix = new Array();
     for(var i = 0; i < matrix.length; i++) {
         newMatrix.push(matrix[i].slice());
@@ -132,6 +154,7 @@ function getMousePosition(e) {
 }
 //fill in cell
 function colorCell(x, y, color) {
+	ctx.globalAlpha=1.0;
 	ctx.fillStyle = color;
 	ctx.fillRect (x * 10, y * 10, 10, 10);
 }
@@ -139,18 +162,23 @@ function colorCell(x, y, color) {
 //clear cell
 function clearCell(x, y) {
 	ctx.clearRect (x * 10, y * 10, 10, 10);
+	if (!fullReset) {
+		ctx.globalAlpha=0.2;
+		ctx.fillStyle = "green";
+		ctx.fillRect (x * 10, y * 10, 10, 10);
+	}
 }
 
 function run() {
-	var i = 0;
-	while (i < 7200) {
-		animate = setTimeout( "getNextGen();", i*500);
-		i++
-	}
+
+	running = setInterval(function() {getNextGen()}, 500);
+
 }
 
 //reset board
 function reset() {
+	fullReset = true;
+	clearInterval(running);
 	for (var x = 0; x < 50; x++) {
 		for (var y = 0; y < 50; y++) {
 			matrix[x][y] = 0;
